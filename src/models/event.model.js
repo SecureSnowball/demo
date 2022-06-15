@@ -24,6 +24,8 @@ const schema = mongoose.Schema({
     type: String,
     required: true,
   },
+}, {
+  versionKey: false,
 });
 
 module.exports = mongoose.model('event', schema);

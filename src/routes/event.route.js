@@ -15,4 +15,17 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.post('/', async (req, res) => {
+  try {
+    const input = req.body;
+    const event = await eventService.save(req.requestId, input);
+    return res.json(event);
+  } catch (err) {
+    logger.fatal(err);
+    return res.status(400).json({
+      message: 'Unable to save event',
+    });
+  }
+});
+
 module.exports = router;

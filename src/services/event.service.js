@@ -24,11 +24,21 @@ class EventService {
     }
 
     if (filter.date) {
-      query.date = new Date(filter.date);
+      const dateTo = new Date(filter.date);
+      const dateFrom = new Date(filter.date);
+
+      dateFrom.setHours(0, 0, 0, 0);
+      dateTo.setDate(dateTo.getDate() + 1);
+      dateTo.setHours(0, 0, 0, 0);
+
+      query.date = {
+        $gte: dateFrom,
+        $lt: dateTo,
+      };
     }
 
     if (filter.isVirtual) {
-      query.isVirtual = filter.isVirtual;
+      query.isVirtual = filter.isVirtual === 'true';
     }
 
     // Requesting one more item than thage page size
@@ -47,6 +57,13 @@ class EventService {
       events,
       hasMorePages,
     };
+  }
+
+  async save(requestId, eventInput) {
+    logger.debug(`${requestId} EventService.save`);
+    const event = new Event(eventInput);
+    await event.save();
+    return event;
   }
 }
 
